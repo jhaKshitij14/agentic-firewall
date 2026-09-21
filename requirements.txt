@@ -1,0 +1,6 @@
+# Tested with: Python 3.12, fastapi 0.141, pydantic 2.13, PyYAML 6.0, mcp 1.30 AND 2.2, pytest 9.1
+fastapi>=0.115
+uvicorn>=0.30
+pydantic>=2.6
+PyYAML>=6.0
+mcp>=1.9          # official MCP Python SDK; both 1.x and 2.x are supported

@@ -1,0 +1,34 @@
+# Firewall policy. Deny by default: a role can only call tools listed here, and only up to max_risk.
+version: 1
+session_ttl_seconds: 3600
+upstream_timeout_seconds: 30
+
+roles:
+  analyst:
+    allowed_tools: [search_news, get_stock_price]
+    max_risk: MEDIUM
+  admin:
+    can_manage: true            # may approve tool fingerprints, read logs and policies
+    allowed_tools: [search_news, get_stock_price, write_file, delete_file, execute_trade]
+    max_risk: HIGH              # nobody gets CRITICAL (e.g. execute_command) unless set explicitly
+
+# Optional overrides. Anything not listed is classified by name (see app/firewall/risk.py).
+tool_risk:
+  search_news: LOW
+  get_stock_price: LOW
+  write_file: MEDIUM
+  delete_file: HIGH
+  execute_trade: HIGH
+  execute_command: CRITICAL
+
+rate_limit:            # per user, sliding window
+  max_requests: 100
+  window_seconds: 60
+login_rate_limit:      # per client address
+  max_requests: 10
+  window_seconds: 60
+circuit_breaker:       # per tool
+  failure_threshold: 5
+  cooldown_seconds: 30
+scanner:
+  max_scan_chars: 1000000
